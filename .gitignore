@@ -3,3 +3,4 @@ script.Run.ps1
 /bin
 *.psbuild
 *.msi
+script.Preview.ps1
