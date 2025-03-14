@@ -1,2 +1,5 @@
 script.TempPoint.psf
 script.Run.ps1
+/bin
+*.psbuild
+*.msi
