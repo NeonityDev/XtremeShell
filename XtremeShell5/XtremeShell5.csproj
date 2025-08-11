@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <AssemblyName>XtremeShell</AssemblyName>
+    <OutputType>WinExe</OutputType>
+    <Company>Neonity</Company>
+    <Product>XtremeShell</Product>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.5.1" />
+    <PackageReference Include="System.Management" Version="9.0.6" />
+    <PackageReference Include="System.Windows.Extensions" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="banner.png" />
+    <Resource Include="Fonts\Poppins-Regular.ttf" />
+    <Resource Include="logo2.png" />
+  </ItemGroup>
+
+</Project>
