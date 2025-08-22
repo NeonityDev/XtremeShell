@@ -181,10 +181,10 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Files" FontSize="20"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Updates" FontSize="20"/>
                     <Button x:Name="UniEdge"            Content="Uninstall Edge"                Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="119,12,0,0" VerticalAlignment="Top" Width="195" Click="button_Click"/>
-                    <Button x:Name="DisableAds"         Content="Disable Ads"                   Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="735,12,0,0" VerticalAlignment="Top" Width="197" Click="button_Click"/>
-                    <Button x:Name="DisableTelemetry"   Content="Disable Telemetry"              Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="532,12,0,0" VerticalAlignment="Top" Width="195" Click="button_Click"/>
+                    <Button x:Name="DisableAds"         Content="Disable Ads"                   Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="764,12,0,0" VerticalAlignment="Top" Width="168" Click="button_Click"/>
+                    <Button x:Name="DisableTelemetry"   Content="Disable Telemetry"              Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="532,12,0,0" VerticalAlignment="Top" Width="227" Click="button_Click"/>
                     <Button x:Name="UltPwrPl"           Content="Enable Ultimate Power Plan"     Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="119,44,0,0" VerticalAlignment="Top" Width="400" Click="button_Click"/>
-                    <Button x:Name="StickyKeys"         Content="Disable Sticky Keys Hotkey"     Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="532,44,0,0" VerticalAlignment="Top" Width="400" Click="button_Click"/>
+                    <Button x:Name="StickyKeys"         Content="Disable Sticky Keys Hotkey"     Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="532,44,0,0" VerticalAlignment="Top" Width="227" Click="button_Click"/>
                     <Button x:Name="CleanReBin"         Content="Clean Recycle Bin"              Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="119,75,0,0" VerticalAlignment="Top" Width="400" Click="button_Click"/>
                     <Button x:Name="DelTmpFls"          Content="Delete temporary files"         Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="532,75,0,0" VerticalAlignment="Top" Width="400" Click="button_Click"/>
                     <Button x:Name="ApplyUpdatePreset"  Content="Enable custom Windows Update presets" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="119,106,0,0" VerticalAlignment="Top" Width="400" Click="button_Click"/>
@@ -304,14 +304,16 @@
                  Background="Transparent"
                  Foreground="White"/>
                     <!-- Bottom card -->
-                    <Border Background="#3D1A29" Margin="735,417,10,10" CornerRadius="8">
+                    <Border Background="#3D1A29" Margin="735,382,10,10" CornerRadius="8">
                         <StackPanel Orientation="Vertical" Margin="10">
+                            <Button x:Name="bmNeonity" Content="Neonity" Style="{StaticResource SecondaryButton}" Click="button_Click" Margin="0,0,0,10"/>
                             <Button x:Name="bmRebootUefi" Content="Reboot to UEFI" Style="{StaticResource PrimaryButton}" Click="button_Click" Margin="0,0,0,10"/>
                             <Button x:Name="bmReboot" Content="Reboot" Style="{StaticResource PrimaryButton}" Click="button_Click" Margin="0,0,0,10"/>
                             <Button x:Name="bmExit" Content="Exit" Style="{StaticResource PrimaryButton}" Click="button_Click"/>
                         </StackPanel>
                     </Border>
                     <Button x:Name="installEdge" Content="Undo Edge Redirections" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="319,12,0,0" VerticalAlignment="Top" Width="200" Click="button_Click"/>
+                    <Button x:Name="installVencord"         Content="Install Vencord"                   Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Margin="764,44,0,0" VerticalAlignment="Top" Width="168" Click="button_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Remove Apps">
@@ -1124,7 +1126,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Image x:Name="xsBanner" HorizontalAlignment="Left" Height="41" Margin="659,20,0,0" VerticalAlignment="Top" Width="258" Source="/banner.png"/>
-        <Label x:Name="xsVersion" Content="5.0" HorizontalAlignment="Left" Margin="917,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
+        <Image x:Name="xsBanner" HorizontalAlignment="Left" Height="41" Margin="671,23,0,0" VerticalAlignment="Top" Width="258" Source="/banner.png"/>
+        <Label x:Name="xsVersion" Content="5.1" HorizontalAlignment="Left" Margin="929,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
     </Grid>
 </Window>

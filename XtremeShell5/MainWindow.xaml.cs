@@ -40,13 +40,20 @@ namespace XtremeShell5
         private bool _isSearching = false;
 
 
-
+        private bool _suppressSearch = true; // block TextChanged logic until we finish loading
         public MainWindow()
         {
             InitializeComponent();
             InitializePackageManager();
+
             InstallPackageList.ItemsSource = _packages;
-            Loaded += MainWindow_Loaded;
+
+            // Show defaults after layout completes
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ShowDefaultPackages();   // fills _packages and collapses empty/loading panels
+                _suppressSearch = false; // allow TextChanged logic afterwards
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void xsVersion_Click(object sender, RoutedEventArgs e)
@@ -83,6 +90,15 @@ namespace XtremeShell5
                         Arguments = "/r /t 0",
                         CreateNoWindow = true,
                         UseShellExecute = false
+                    });
+                    break;
+
+                case "bmNeonity":
+                    string yt = "https://www.youtube.com/@Neonity";
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = yt,
+                        UseShellExecute = true
                     });
                     break;
 
@@ -622,9 +638,97 @@ foreach ($path in $ifeoPaths)
                     bmLog.Text = "Removed Microsoft Edge redirections, Edge can be reinstalled.";
                     break;
 
+                case "installVencord":
+                    await InstallVencordAsync();
+                    break;
+
                 default:
                     bmLog.Text = $"[Error] No handler for button: {clickedButton.Name}";
                     break;
+            }
+        }
+
+        private async Task InstallVencordAsync()
+        {
+            string url = "https://github.com/Vencord/Installer/releases/latest/download/VencordInstaller.exe";
+            string installerPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                "Downloads",
+                "vencord-installer.exe"
+            );
+
+            try
+            {
+                bmLog.Text = "Downloading Vencord installer executable...";
+
+                using (var http = new HttpClient())
+                using (var response = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    var total = response.Content.Headers.ContentLength;
+                    using (var input = await response.Content.ReadAsStreamAsync())
+                    using (var output = new FileStream(installerPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, useAsync: true))
+                    {
+                        var buffer = new byte[8192];
+                        long totalRead = 0;
+                        int read;
+                        while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                        {
+                            await output.WriteAsync(buffer, 0, read);
+                            totalRead += read;
+
+                            if (total.HasValue)
+                            {
+                                var pct = (int)(totalRead * 100 / total.Value);
+                                bmLog.Text = $"Downloading Vencord installer executable... {pct}%";
+                            }
+                        }
+                    }
+                }
+
+                if (!File.Exists(installerPath))
+                {
+                    bmLog.Text = "ERROR: Failed to download the installer.";
+                    return;
+                }
+
+                bmLog.Text = "Download complete. Running the installer...";
+
+                var tcs = new TaskCompletionSource<int>();
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = installerPath,
+                        Arguments = "/S",               // silent install
+                        UseShellExecute = true,         // lets UAC prompt if needed
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    },
+                    EnableRaisingEvents = true
+                };
+
+                proc.Exited += (s, e) =>
+                {
+                    tcs.TrySetResult(proc.ExitCode);
+                    proc.Dispose();
+                };
+
+                if (!proc.Start())
+                {
+                    bmLog.Text = "ERROR: Could not start the installer.";
+                    return;
+                }
+
+                int exitCode = await tcs.Task;
+
+                bmLog.Text = exitCode == 0
+                    ? "Vencord installed successfully."
+                    : $"Installer finished with exit code {exitCode}.";
+            }
+            catch (Exception ex)
+            {
+                bmLog.Text = $"ERROR: {ex.Message}";
             }
         }
 
@@ -968,13 +1072,9 @@ foreach ($path in $ifeoPaths)
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Debug: Check if method is being called
-            System.Diagnostics.Debug.WriteLine($"Search text changed: '{SearchTextBox?.Text}'");
-
             ApplySearchFilter();
             UpdateSelectionCount();
 
-            // Update placeholder visibility
             if (SearchPlaceholder != null && SearchTextBox != null)
             {
                 SearchPlaceholder.Visibility = string.IsNullOrEmpty(SearchTextBox.Text) ?
@@ -1139,40 +1239,86 @@ foreach ($path in $ifeoPaths)
         /// <summary>
         /// Package Store
         /// </summary>
+        /// 
 
+        // Default packages
+        private readonly List<PackageItem> _defaultPackages = new()
+        {
+    new PackageItem { Title = "brave",              Version = "", Summary = "Brave Browser",        Authors = "Brave Software, Inc."},
+    new PackageItem { Title = "discord",            Version = "", Summary = "Discord Desktop",      Authors = "Discord Inc."},
+    new PackageItem { Title = "epicgameslauncher",  Version = "", Summary = "Epic Games Launcher",  Authors = "Epic Games"},
+    new PackageItem { Title = "firefox",            Version = "", Summary = "Firefox",              Authors = "Mozilla Foundation"},
+    new PackageItem { Title = "git",                Version = "", Summary = "Git",                  Authors = "Git SCM Team"},
+    new PackageItem { Title = "hwinfo",             Version = "", Summary = "HWiNFO",               Authors = "Martin Malik"},
+    new PackageItem { Title = "spotify",            Version = "", Summary = "Spotify",              Authors = "Spotify AB"},
+    new PackageItem { Title = "steam",              Version = "", Summary = "Steam",                Authors = "Valve Corporation"},
+    new PackageItem { Title = "vlc",                Version = "", Summary = "VLC Media Player",     Authors = "VideoLAN"},
+    new PackageItem { Title = "vscodium",           Version = "", Summary = "VSCodium",             Authors = "VSCodium Community"},
+    new PackageItem { Title = "winscp",             Version = "", Summary = "WinSCP",               Authors = "Martin Přikryl"},
+};
+
+        private void ShowDefaultPackages()
+        {
+            _packages.Clear();
+            _selectedPackages.Clear();
+            foreach (var p in _defaultPackages)
+            {
+                _packages.Add(new PackageItem
+                {
+                    Title = p.Summary,
+                    Version = p.Version,
+                    Authors = p.Authors,
+                    ButtonText = "Select",
+                    IsButtonEnabled = true,
+                    IsSelected = false
+                });
+            }
+
+            InstallPackageCountText.Text = $"{_packages.Count} recommended packages";
+            InstallEmptyStatePanel.Visibility = _packages.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            InstallLoadingPanel.Visibility = Visibility.Collapsed;
+            UpdateSelectedCount();
+        }
 
 
         private CancellationTokenSource _searchCts;
 
         private async void InstallSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (_suppressSearch)
+            {
+                InstallSearchPlaceholder.Visibility = string.IsNullOrWhiteSpace(InstallSearchTextBox.Text)
+                    ? Visibility.Visible : Visibility.Collapsed;
+                return;
+            }
+
             InstallSearchPlaceholder.Visibility = string.IsNullOrWhiteSpace(InstallSearchTextBox.Text)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
-            // Cancel any pending search
             _searchCts?.Cancel();
-
-            // Create new token for this search
             _searchCts = new CancellationTokenSource();
             var token = _searchCts.Token;
-            string query = InstallSearchTextBox.Text.Trim();
+            var query = InstallSearchTextBox.Text.Trim();
 
             try
             {
                 await Task.Delay(300, token);
 
-                // Run search only if not cancelled
+                if (!token.IsCancellationRequested && string.IsNullOrEmpty(query))
+                {
+                    ShowDefaultPackages();   // show defaults when empty
+                    return;
+                }
+
                 if (!token.IsCancellationRequested && !string.IsNullOrEmpty(query))
                 {
                     await SearchPackagesAsync(query);
                 }
             }
-            catch (TaskCanceledException)
-            {
-                // Ignore
-            }
+            catch (TaskCanceledException) { }
         }
+
 
         private static void UninstallWin32(PackageInfo package)
 {
@@ -1556,13 +1702,14 @@ private static void ParseExeAndRun(string command, string extraArgs)
 
         private void InstallClearButton_Click(object sender, RoutedEventArgs e)
         {
+            // stop search
+            _searchCts?.Cancel();
+
             InstallSearchTextBox.Text = "";
-            _packages.Clear();
-            _selectedPackages.Clear();
-            UpdateSelectedCount();
-            InstallPackageCountText.Text = "(Search to browse)";
-            InstallEmptyStatePanel.Visibility = Visibility.Visible;
+            ShowDefaultPackages();
+            InstallPackageCountText.Text = $"{_packages.Count} recommended packages";
         }
+
 
         private async void InstallButton_Click(object sender, RoutedEventArgs e)
         {
