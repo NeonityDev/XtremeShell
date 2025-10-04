@@ -30,6 +30,7 @@ namespace XtremeShell5
 
                 if (!installed)
                 {
+                    bmLog.Text = string.Empty;
                     MessageBox.Show(
                         "Chocolatey installation was cancelled or failed.",
                         "Chocolatey",
@@ -37,6 +38,10 @@ namespace XtremeShell5
                         MessageBoxImage.Information);
 
                     HidePackageStoreTab();
+                }
+                else
+                {
+                    bmLog.Text = "Chocolatey installed successfully.";
                 }
             }
             else

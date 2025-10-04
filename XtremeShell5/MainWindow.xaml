@@ -891,93 +891,46 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Background="#2A1219" 
-                       Margin="0,2" 
-                       CornerRadius="6" 
-                       BorderBrush="#4A2E3A" 
-                       BorderThickness="1">
+                                        <Border Margin="0,2"
+                                                Padding="10,6"
+                                                CornerRadius="6"
+                                                BorderThickness="1"
+                                                MouseLeftButtonUp="InstallPackageItem_Click"
+                                                Cursor="Hand">
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#3D1F2A"/>
+                                                            <Setter Property="Background" Value="#3B1B27"/>
+                                                            <Setter Property="BorderBrush" Value="#4A2E3A"/>
                                                         </Trigger>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="Background" Value="#5A2438"/>
+                                                            <Setter Property="BorderBrush" Value="#B82A5A"/>
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Border.Style>
-                                            <Grid Margin="12,10">
+                                            <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Title}" 
-                                      FontSize="14" 
-                                      FontWeight="SemiBold" 
-                                      Foreground="White" 
-                                      TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Text="{Binding Authors}" 
-                                      FontSize="11" 
-                                      Foreground="#B0B0B0" 
-                                      TextTrimming="CharacterEllipsis"
-                                      Margin="0,2,0,0"/>
-                                                    <TextBlock Text="{Binding Summary}" 
-                                      FontSize="10" 
-                                      Foreground="#8B6F7F" 
-                                      TextTrimming="CharacterEllipsis"
-                                      Margin="0,2,0,0"
-                                      MaxWidth="400"/>
-                                                </StackPanel>
-                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
-                                                    <TextBlock Text="{Binding Version}" 
-                                      FontSize="11" 
-                                      Foreground="#8B6F7F" 
-                                      HorizontalAlignment="Right"/>
-                                                    <TextBlock Text="{Binding DownloadCount, StringFormat=\{0:N0\} downloads}" 
-                                      FontSize="9" 
-                                      Foreground="#6B4C57" 
-                                      HorizontalAlignment="Right"
-                                      Margin="0,2,0,0"/>
-                                                </StackPanel>
-                                                <Border Grid.Column="2" 
-                               Background="#2D5A2D" 
-                               BorderBrush="#4A8B4A" 
-                               BorderThickness="1" 
-                               CornerRadius="4"
-                               Margin="10,0,0,0">
-                                                    <Button Content="{Binding ButtonText}" 
-                                   Background="Transparent" 
-                                   Foreground="White" 
-                                   BorderThickness="0" 
-                                   Padding="12,6" 
-                                   MinWidth="80"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   IsEnabled="{Binding IsButtonEnabled}"
-                                   Click="InstallSelectButton_Click"
-                                   Tag="{Binding}">
-                                                        <Button.Style>
-                                                            <Style TargetType="{x:Type Button}">
-                                                                <Setter Property="Template">
-                                                                    <Setter.Value>
-                                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                        </ControlTemplate>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="#3D6A3D"/>
-                                                                    </Trigger>
-                                                                    <Trigger Property="IsEnabled" Value="False">
-                                                                        <Setter Property="Foreground" Value="#6B6B6B"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Button.Style>
-                                                    </Button>
-                                                </Border>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="14"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="White"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Version}"
+                                                           FontSize="13"
+                                                           Foreground="#D9B9C7"
+                                                           Margin="12,0,0,0"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -1127,6 +1080,6 @@
             </TabItem>
         </TabControl>
         <Image x:Name="xsBanner" HorizontalAlignment="Left" Height="41" Margin="671,23,0,0" VerticalAlignment="Top" Width="258" Source="/banner.png"/>
-        <Label x:Name="xsVersion" Content="5.1" HorizontalAlignment="Left" Margin="929,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
+        <Label x:Name="xsVersion" Content="5.2" HorizontalAlignment="Left" Margin="929,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
     </Grid>
 </Window>

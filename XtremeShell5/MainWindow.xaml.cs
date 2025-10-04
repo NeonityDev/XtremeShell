@@ -1,28 +1,15 @@
 ﻿using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.Packaging;
-using System.Management;
+using System.IO;
+using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Net.Http;
-using System.Xml.Linq;
-using IOPath = System.IO.Path;
-using IOFile = System.IO.File;
-using System.Runtime.InteropServices;
 using Windows.Management.Deployment;
-using Windows.ApplicationModel;
-using System.IO;
+using IOPath = System.IO.Path;
 
 
 
@@ -38,12 +25,14 @@ namespace XtremeShell5
         private ObservableCollection<PackageItem> _packages = new ObservableCollection<PackageItem>();
         private ObservableCollection<PackageItem> _selectedPackages = new ObservableCollection<PackageItem>();
         private bool _isSearching = false;
+        private bool _exitRequested = false;
 
 
         private bool _suppressSearch = true; // block TextChanged logic until we finish loading
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
             InitializePackageManager();
 
             InstallPackageList.ItemsSource = _packages;
@@ -76,9 +65,23 @@ namespace XtremeShell5
             switch (clickedButton.Name)
             {
                 case "bmExit":
+                    if (_exitRequested)
+                    {
+                        this.Close();
+                        break;
+                    }
+
+                    _exitRequested = true;
                     bmLog.Text = "Thanks for using XtremeShell!";
-                    await Task.Delay(500);
-                    this.Close();
+
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(500);
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (_exitRequested) this.Close();
+                        });
+                    });
                     break;
 
                 case "bmReboot":
@@ -723,7 +726,7 @@ foreach ($path in $ifeoPaths)
                 int exitCode = await tcs.Task;
 
                 bmLog.Text = exitCode == 0
-                    ? "Vencord installed successfully."
+                    ? ""
                     : $"Installer finished with exit code {exitCode}.";
             }
             catch (Exception ex)
@@ -848,7 +851,7 @@ foreach ($path in $ifeoPaths)
                 public uint dwFlags;
             }
 
-            
+
 
 
             public static void Toggle(bool enable)
@@ -1243,19 +1246,27 @@ foreach ($path in $ifeoPaths)
 
         // Default packages
         private readonly List<PackageItem> _defaultPackages = new()
-        {
-    new PackageItem { Title = "brave",              Version = "", Summary = "Brave Browser",        Authors = "Brave Software, Inc."},
-    new PackageItem { Title = "discord",            Version = "", Summary = "Discord Desktop",      Authors = "Discord Inc."},
-    new PackageItem { Title = "epicgameslauncher",  Version = "", Summary = "Epic Games Launcher",  Authors = "Epic Games"},
-    new PackageItem { Title = "firefox",            Version = "", Summary = "Firefox",              Authors = "Mozilla Foundation"},
-    new PackageItem { Title = "git",                Version = "", Summary = "Git",                  Authors = "Git SCM Team"},
-    new PackageItem { Title = "hwinfo",             Version = "", Summary = "HWiNFO",               Authors = "Martin Malik"},
-    new PackageItem { Title = "spotify",            Version = "", Summary = "Spotify",              Authors = "Spotify AB"},
-    new PackageItem { Title = "steam",              Version = "", Summary = "Steam",                Authors = "Valve Corporation"},
-    new PackageItem { Title = "vlc",                Version = "", Summary = "VLC Media Player",     Authors = "VideoLAN"},
-    new PackageItem { Title = "vscodium",           Version = "", Summary = "VSCodium",             Authors = "VSCodium Community"},
-    new PackageItem { Title = "winscp",             Version = "", Summary = "WinSCP",               Authors = "Martin Přikryl"},
+{
+    new PackageItem { Title = "7zip",               Summary = "7-Zip"},
+    new PackageItem { Title = "brave",              Summary = "Brave Browser"},
+    new PackageItem { Title = "discord",            Summary = "Discord Desktop"},
+    new PackageItem { Title = "docker",             Summary = "Docker Desktop"},
+    new PackageItem { Title = "edge",               Summary = "Microsoft Edge"},
+    new PackageItem { Title = "epicgameslauncher",  Summary = "Epic Games Launcher"},
+    new PackageItem { Title = "firefox",            Summary = "Firefox"},
+    new PackageItem { Title = "git",                Summary = "Git"},
+    new PackageItem { Title = "hwinfo",             Summary = "HWiNFO"},
+    new PackageItem { Title = "mobaxterm",          Summary = "MobaXterm"},
+    new PackageItem { Title = "obs-studio",         Summary = "OBS Studio"},
+    new PackageItem { Title = "powertoys",          Summary = "Microsoft PowerToys"},
+    new PackageItem { Title = "python",             Summary = "Python"},
+    new PackageItem { Title = "spotify",            Summary = "Spotify"},
+    new PackageItem { Title = "steam",              Summary = "Steam"},
+    new PackageItem { Title = "vlc",                Summary = "VLC Media Player"},
+    new PackageItem { Title = "vscodium",           Summary = "VSCodium"},
+    new PackageItem { Title = "winscp",             Summary = "WinSCP"},
 };
+
 
         private void ShowDefaultPackages()
         {
@@ -1266,10 +1277,6 @@ foreach ($path in $ifeoPaths)
                 _packages.Add(new PackageItem
                 {
                     Title = p.Summary,
-                    Version = p.Version,
-                    Authors = p.Authors,
-                    ButtonText = "Select",
-                    IsButtonEnabled = true,
                     IsSelected = false
                 });
             }
@@ -1321,74 +1328,74 @@ foreach ($path in $ifeoPaths)
 
 
         private static void UninstallWin32(PackageInfo package)
-{
-    if (string.IsNullOrWhiteSpace(package.UninstallString)) return;
-
-    var uninstallCmd = package.UninstallString.Trim();
-
-    if (uninstallCmd.StartsWith("MsiExec.exe", StringComparison.OrdinalIgnoreCase) ||
-        uninstallCmd.StartsWith("msiexec", StringComparison.OrdinalIgnoreCase))
-    {
-        var args = uninstallCmd.Replace("MsiExec.exe", "", StringComparison.OrdinalIgnoreCase)
-                               .Replace("msiexec", "", StringComparison.OrdinalIgnoreCase)
-                               .Trim();
-        if (args.Contains("/I ", StringComparison.OrdinalIgnoreCase))
-            args = args.Replace("/I", "/X", StringComparison.OrdinalIgnoreCase);
-        else if (!args.Contains("/X", StringComparison.OrdinalIgnoreCase))
-            args = "/X " + args;
-
-        args += " /quiet /norestart";
-
-        using var p = Process.Start(new ProcessStartInfo
         {
-            FileName = "msiexec.exe",
-            Arguments = args,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        });
-        p?.WaitForExit(30000);
-        return;
-    }
-    ParseExeAndRun(uninstallCmd, " /S /silent");
-}
+            if (string.IsNullOrWhiteSpace(package.UninstallString)) return;
 
-private static void ParseExeAndRun(string command, string extraArgs)
-{
-    string fileName, arguments = "";
-    var cmd = command.Trim();
+            var uninstallCmd = package.UninstallString.Trim();
 
-    if (cmd.StartsWith("\""))
-    {
-        var end = cmd.IndexOf("\"", 1);
-        fileName = end > 0 ? cmd.Substring(1, end - 1) : cmd.Trim('"');
-        if (end > 0 && cmd.Length > end + 1) arguments = cmd[(end + 1)..].Trim();
-    }
-    else
-    {
-        var exeIndex = cmd.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
-        if (exeIndex > 0)
-        {
-            fileName = cmd.Substring(0, exeIndex + 4);
-            if (cmd.Length > exeIndex + 4) arguments = cmd[(exeIndex + 4)..].Trim();
+            if (uninstallCmd.StartsWith("MsiExec.exe", StringComparison.OrdinalIgnoreCase) ||
+                uninstallCmd.StartsWith("msiexec", StringComparison.OrdinalIgnoreCase))
+            {
+                var args = uninstallCmd.Replace("MsiExec.exe", "", StringComparison.OrdinalIgnoreCase)
+                                       .Replace("msiexec", "", StringComparison.OrdinalIgnoreCase)
+                                       .Trim();
+                if (args.Contains("/I ", StringComparison.OrdinalIgnoreCase))
+                    args = args.Replace("/I", "/X", StringComparison.OrdinalIgnoreCase);
+                else if (!args.Contains("/X", StringComparison.OrdinalIgnoreCase))
+                    args = "/X " + args;
+
+                args += " /quiet /norestart";
+
+                using var p = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "msiexec.exe",
+                    Arguments = args,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
+                p?.WaitForExit(30000);
+                return;
+            }
+            ParseExeAndRun(uninstallCmd, " /S /silent");
         }
-        else
+
+        private static void ParseExeAndRun(string command, string extraArgs)
         {
-            fileName = cmd; // hope for the best
+            string fileName, arguments = "";
+            var cmd = command.Trim();
+
+            if (cmd.StartsWith("\""))
+            {
+                var end = cmd.IndexOf("\"", 1);
+                fileName = end > 0 ? cmd.Substring(1, end - 1) : cmd.Trim('"');
+                if (end > 0 && cmd.Length > end + 1) arguments = cmd[(end + 1)..].Trim();
+            }
+            else
+            {
+                var exeIndex = cmd.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
+                if (exeIndex > 0)
+                {
+                    fileName = cmd.Substring(0, exeIndex + 4);
+                    if (cmd.Length > exeIndex + 4) arguments = cmd[(exeIndex + 4)..].Trim();
+                }
+                else
+                {
+                    fileName = cmd; // hope for the best
+                }
+            }
+
+            if (!string.IsNullOrEmpty(extraArgs))
+                arguments = (arguments + " " + extraArgs).Trim();
+
+            using var p = Process.Start(new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
+            p?.WaitForExit(30000);
         }
-    }
-
-    if (!string.IsNullOrEmpty(extraArgs))
-        arguments = (arguments + " " + extraArgs).Trim();
-
-    using var p = Process.Start(new ProcessStartInfo
-    {
-        FileName = fileName,
-        Arguments = arguments,
-        UseShellExecute = false,
-        CreateNoWindow = true
-    });
-    p?.WaitForExit(30000);
-}
 
 
         private static List<PackageInfo> EnumerateWin32FromRegistry()
@@ -1441,7 +1448,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
             var list = new List<PackageInfo>();
 
             var pm = new PackageManager();
-            var packages = pm.FindPackagesForUser(string.Empty); 
+            var packages = pm.FindPackagesForUser(string.Empty);
 
             foreach (var pkg in packages)
             {
@@ -1626,9 +1633,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
                             Title = parts[0],
                             Version = parts[1],
                             Summary = "",
-                            Authors = "",
-                            ButtonText = "Select",
-                            IsButtonEnabled = true
+                            Authors = ""
                         });
                     }
                 }
@@ -1653,18 +1658,38 @@ private static void ParseExeAndRun(string command, string extraArgs)
 
 
 
-        private async void InstallSelectButton_Click(object sender, RoutedEventArgs e)
+        private void InstallPackageItem_Click(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is PackageItem pkg)
+            if (sender is Border border && border.DataContext is PackageItem pkg)
             {
-                pkg.IsSelected = !pkg.IsSelected;
-                pkg.ButtonText = pkg.IsSelected ? "Selected" : "Select";
-                if (pkg.IsSelected)
-                    _selectedPackages.Add(pkg);
-                else
-                    _selectedPackages.Remove(pkg);
+                TogglePackageSelection(pkg);
+                e.Handled = true;
+            }
+        }
 
-                UpdateSelectedCount();
+        private void TogglePackageSelection(PackageItem pkg)
+        {
+            if (pkg == null) return;
+
+            ApplyPackageSelection(pkg, !pkg.IsSelected);
+            UpdateSelectedCount();
+        }
+
+        private void ApplyPackageSelection(PackageItem pkg, bool isSelected)
+        {
+            if (pkg == null || pkg.IsSelected == isSelected)
+                return;
+
+            pkg.IsSelected = isSelected;
+
+            if (isSelected)
+            {
+                if (!_selectedPackages.Contains(pkg))
+                    _selectedPackages.Add(pkg);
+            }
+            else
+            {
+                _selectedPackages.Remove(pkg);
             }
         }
 
@@ -1678,13 +1703,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
         {
             foreach (var pkg in _packages)
             {
-                if (!pkg.IsSelected)
-                {
-                    pkg.IsSelected = true;
-                    pkg.ButtonText = "Selected";
-                    if (!_selectedPackages.Contains(pkg))
-                        _selectedPackages.Add(pkg);
-                }
+                ApplyPackageSelection(pkg, true);
             }
             UpdateSelectedCount();
         }
@@ -1693,10 +1712,8 @@ private static void ParseExeAndRun(string command, string extraArgs)
         {
             foreach (var pkg in _packages)
             {
-                pkg.IsSelected = false;
-                pkg.ButtonText = "Select";
+                ApplyPackageSelection(pkg, false);
             }
-            _selectedPackages.Clear();
             UpdateSelectedCount();
         }
 
@@ -1728,15 +1745,14 @@ private static void ParseExeAndRun(string command, string extraArgs)
             InstallButton.IsEnabled = false;
             InstallButtonBorder.Background = System.Windows.Media.Brushes.Gray;
 
-            foreach (var pkg in _selectedPackages)
+            var packagesToInstall = new List<PackageItem>(_selectedPackages);
+
+            foreach (var pkg in packagesToInstall)
             {
-                pkg.ButtonText = "Installing...";
-                pkg.IsButtonEnabled = false;
                 await RunCommandAsync("choco", $"install {pkg.Title} -y");
-                pkg.ButtonText = "Installed";
+                ApplyPackageSelection(pkg, false);
             }
 
-            _selectedPackages.Clear();
             UpdateSelectedCount();
 
             InstallButton.Content = originalText;
@@ -1768,7 +1784,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
             });
         }
 
-        
+
 
         private async void ToggleHandler(object sender, RoutedEventArgs e)
         {
@@ -1975,7 +1991,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot",
                                   "TurnOffWindowsCopilot", enable ? 0 : 1, RegistryValueKind.DWord);
             }
-            catch {}
+            catch { }
 
             // Taskbar button (doesn’t fully disable feature, just the button)
             Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
@@ -2006,7 +2022,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System",
                                   "VerboseStatus", enable ? 1 : 0, RegistryValueKind.DWord);
             }
-            catch {}
+            catch { }
         }
 
         // ===== Game Mode =====
@@ -2043,7 +2059,7 @@ private static void ParseExeAndRun(string command, string extraArgs)
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting",
                                   "Disabled", enable ? 0 : 1, RegistryValueKind.DWord);
             }
-            catch {}
+            catch { }
         }
 
         // === HELPER METHODS ===
