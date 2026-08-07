@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,17 +7,27 @@ using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Windows;
 
-namespace XtremeShell5
+namespace XtremeShell
 {
     public partial class BraveDebloatWindow : Window
     {
         private const string BravePolicyPath = @"SOFTWARE\Policies\BraveSoftware\Brave";
+        private readonly bool _presetBuilderMode;
+        private readonly Action<IReadOnlyList<PresetEntry>>? _presetRecorder;
 
         public ObservableCollection<BraveDebloatOption> Options { get; private set; }
 
         public BraveDebloatWindow()
+            : this(false, null)
+        {
+        }
+
+        public BraveDebloatWindow(bool presetBuilderMode, Action<IReadOnlyList<PresetEntry>>? presetRecorder)
         {
             InitializeComponent();
+
+            _presetBuilderMode = presetBuilderMode;
+            _presetRecorder = presetRecorder;
 
             Options = new ObservableCollection<BraveDebloatOption>();
             DataContext = this;
@@ -25,6 +35,13 @@ namespace XtremeShell5
             LoadOptions();
             LoadCurrentPolicyState();
             UpdateSelectionState();
+
+            if (_presetBuilderMode)
+            {
+                Title = "Debloat Brave - Preset Builder";
+                ApplyButton.Content = "Add to Preset";
+                StatusText.Text = "Preset Builder is active.";
+            }
         }
 
         private void LoadOptions()
@@ -116,7 +133,7 @@ namespace XtremeShell5
         {
             try
             {
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(BravePolicyPath))
+                using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(BravePolicyPath))
                 {
                     if (key == null)
                     {
@@ -126,7 +143,7 @@ namespace XtremeShell5
 
                     foreach (BraveDebloatOption option in Options)
                     {
-                        object currentValue = key.GetValue(option.ValueName);
+                        object? currentValue = key.GetValue(option.ValueName);
 
                         if (currentValue == null)
                         {
@@ -170,8 +187,8 @@ namespace XtremeShell5
 
             if (option.ValueKind == RegistryValueKind.String)
             {
-                string currentString = currentValue as string;
-                string expectedString = option.Value as string;
+                string? currentString = currentValue as string;
+                string? expectedString = option.Value as string;
 
                 return string.Equals(
                     currentString ?? string.Empty,
@@ -183,7 +200,7 @@ namespace XtremeShell5
             return false;
         }
 
-        private void Option_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Option_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(BraveDebloatOption.IsSelected))
             {
@@ -205,6 +222,19 @@ namespace XtremeShell5
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_presetBuilderMode)
+            {
+                List<PresetEntry> entries = Options
+                    .Where(option => option.IsSelected)
+                    .Select(option => option.ToPresetEntry())
+                    .ToList();
+
+                _presetRecorder?.Invoke(entries);
+                StatusText.Text = entries.Count + " Brave option(s) added to preset.";
+                Close();
+                return;
+            }
+
             if (!IsRunningAsAdministrator())
             {
                 MessageBox.Show(
@@ -344,11 +374,24 @@ namespace XtremeShell5
             ValueKind = valueKind;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public PresetEntry ToPresetEntry()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            return new PresetEntry
+            {
+                Category = "Brave Debloat",
+                ActionType = PresetActionTypes.BravePolicy,
+                TargetId = ValueName,
+                Name = FriendlyName,
+                Value = Value?.ToString() ?? string.Empty,
+                ValueKind = ValueKind.ToString()
+            };
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChangedEventHandler? handler = PropertyChanged;
 
             if (handler != null)
             {

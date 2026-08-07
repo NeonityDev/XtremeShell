@@ -1,24 +1,37 @@
 # XtremeShell
 
-**The ultimate Windows debloater and app manager**
-⚡ Remove bloatware, uninstall unwanted apps, and install new software from the built-in package store.  
-![XtremeShell](https://i.imgur.com/l7S5mcQ.png)
+**A modern Windows customization, debloating and app management tool.**
+![XtremeShell](https://i.imgur.com/zS2DMgN.png)
+XtremeShell helps you clean up Windows, manage applications, apply system tweaks, and create reusable configuration presets, all from one interface.
 
 ---
 
 ## ✨ Features
 
-- 🧹 **Debloat Windows**  
-  Remove unnecessary system apps, services, and telemetry to boost performance.
+* 🧹 **Windows Debloating**
+  Remove unwanted Windows apps, disable unnecessary features and reduce telemetry.
 
-- 📦 **Package Store**  
-  Browse and install apps directly from within XtremeShell.
+* ⚙️ **System Tweaks**
+  Customize Windows behavior and system settings without manually editing the registry or running commands.
 
-- ❌ **App Removal**  
-  Uninstall both Microsoft Store and classic Win32 applications with ease.
+* 🧩 **Presets**
+  Create reusable XtremeShell configurations and apply them on other PCs.
+  Presets can include tweaks, Brave policies, app installations and app removals.
 
-- ⚡ **Fast & Lightweight**  
-  Runs without heavy resource usage, no background processes when closed.
+* 📦 **App Library**
+  Browse and install applications directly from XtremeShell using the built-in Chocolatey-powered App Library.
 
-- 🛡 **Safe & Customizable**  
-  Choose exactly what to remove: nothing gets deleted without your confirmation.
+* ❌ **App Removal**
+  Easily uninstall Microsoft Store and classic Win32 applications.
+
+* 🌐 **Brave Configuration**
+  Manage supported Brave browser policies directly from XtremeShell.
+
+* 🔍 **System State Detection**
+  XtremeShell automatically detects the current state of supported settings whenever possible.
+
+* ⚡ **Fast & Lightweight**
+  No unnecessary background processes, XtremeShell only runs when you need it.
+
+* 🛡️ **Safe & Customizable**
+  You stay in control of what gets changed, removed or installed.

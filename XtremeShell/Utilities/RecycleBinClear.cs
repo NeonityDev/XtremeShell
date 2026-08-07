@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace XtremeShell5
+namespace XtremeShell
 {
     public static class RecycleBinClear
     {

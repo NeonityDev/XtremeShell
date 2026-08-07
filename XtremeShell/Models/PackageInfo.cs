@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace XtremeShell5
+namespace XtremeShell
 {
     public enum PackageType { Win32, Uwp }
 
@@ -29,6 +29,6 @@ namespace XtremeShell5
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

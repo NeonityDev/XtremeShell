@@ -1,9 +1,9 @@
-﻿<Window
+<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:av="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="XtremeShell5.MainWindow"
-        Title="XtremeShell" Height="700" Width="1010" Background="#1f070f"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="XtremeShell.MainWindow"
+        Title="XtremeShell" Height="700" Width="1028" Background="#1f070f"
         FontFamily="pack://application:,,,/Fonts/#Poppins"
         ResizeMode="NoResize"
         WindowStyle="SingleBorderWindow">
@@ -129,7 +129,7 @@
                     Background="#290914"
                     BorderThickness="0"
                     Padding="10">
-            <TabItem Header="Home" IsSelected="True">
+            <TabItem Header="General" IsSelected="True">
                 <TabItem.Resources>
                     <Style x:Key="SecondaryButton" TargetType="{x:Type Button}">
                         <Setter Property="Foreground" Value="White"/>
@@ -223,14 +223,14 @@
                                   StrokeThickness="2" 
                                   Visibility="Collapsed"
                                   StrokeLineJoin="Round"/>
-                                                        <TextBlock x:Name="QuestionMark"
-                                       Text="?"
-                                       Foreground="#FF8B6F7F"
-                                       FontWeight="Bold"
-                                       FontSize="12"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Visibility="Collapsed"/>
+                                                        <TextBlock x:Name="IndeterminateMark"
+           Text="-"
+           Foreground="#FF8B6F7F"
+           FontWeight="Bold"
+           FontSize="16"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Visibility="Collapsed"/>
                                                     </Grid>
                                                 </Border>
                                                 <ContentPresenter VerticalAlignment="Center" 
@@ -241,11 +241,11 @@
                                                 <Trigger Property="IsChecked" Value="True">
                                                     <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
                                                     <Setter TargetName="Border" Property="Background" Value="#FF8B6F7F"/>
-                                                    <Setter TargetName="QuestionMark" Property="Visibility" Value="Collapsed"/>
+                                                    <Setter TargetName="IndeterminateMark" Property="Visibility" Value="Collapsed"/>
                                                 </Trigger>
                                                 <!-- Indeterminate -->
                                                 <Trigger Property="IsChecked" Value="{x:Null}">
-                                                    <Setter TargetName="QuestionMark" Property="Visibility" Value="Visible"/>
+                                                    <Setter TargetName="IndeterminateMark" Property="Visibility" Value="Visible"/>
                                                     <Setter TargetName="Border" Property="Background" Value="#1A0A0F"/>
                                                     <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
                                                 </Trigger>
@@ -265,31 +265,31 @@
                         </Border.Resources>
                         <StackPanel Margin="15">
                             <UniformGrid Columns="3" Rows="0" Margin="0,4,0,0">
-                                <CheckBox x:Name="cbClassicContextMenu" IsChecked="{x:Null}" Content="Classic Context Menu"
+                                <CheckBox x:Name="cbClassicContextMenu" IsChecked="False" Content="Classic Context Menu"
           IsThreeState="False"
           Checked="ToggleHandler"
           Unchecked="ToggleHandler" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbPowerThrottling" IsChecked="{x:Null}" Checked="ToggleHandler"
+                                <CheckBox x:Name="cbPowerThrottling" IsChecked="False" Checked="ToggleHandler"
           Unchecked="ToggleHandler"                  Content="Power Throttling" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbWindowsUpdate" IsChecked="{x:Null}"                    Content="Windows Update" Checked="ToggleHandler"
+                                <CheckBox x:Name="cbWindowsUpdate" IsChecked="False"                    Content="Windows Update" Checked="ToggleHandler"
           Unchecked="ToggleHandler" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbAnimations" IsChecked="{x:Null}"                        Checked="ToggleHandler"
+                                <CheckBox x:Name="cbAnimations" IsChecked="False"                        Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Visual Effects" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbDarkTheme" IsChecked="{x:Null}"                          Checked="ToggleHandler"
+                                <CheckBox x:Name="cbDarkTheme" IsChecked="False"                          Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Dark Theme" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbWindowsCopilot" IsChecked="{x:Null}"                    Checked="ToggleHandler"
+                                <CheckBox x:Name="cbWindowsCopilot" IsChecked="False"                    Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Windows Copilot" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbShowFileExtensions" IsChecked="{x:Null}"                Checked="ToggleHandler"
+                                <CheckBox x:Name="cbShowFileExtensions" IsChecked="False"                Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Show File Extensions" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbHibernation" IsChecked="{x:Null}"                       Checked="ToggleHandler"
+                                <CheckBox x:Name="cbHibernation" IsChecked="False"                       Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Hibernation" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbVerboseLogon" IsChecked="{x:Null}"                      Checked="ToggleHandler"
+                                <CheckBox x:Name="cbVerboseLogon" IsChecked="False"                      Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Verbose logon" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbGameBar" IsChecked="{x:Null}"                           Checked="ToggleHandler"
+                                <CheckBox x:Name="cbGameBar" IsChecked="False"                           Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Game Mode" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbExplorerThisPC" IsChecked="{x:Null}"                    Checked="ToggleHandler"
+                                <CheckBox x:Name="cbExplorerThisPC" IsChecked="False"                    Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Open File Explorer to This PC" Margin="0,8,16,0"/>
-                                <CheckBox x:Name="cbWindowsErrorReporting" IsChecked="{x:Null}"             Checked="ToggleHandler"
+                                <CheckBox x:Name="cbWindowsErrorReporting" IsChecked="False"             Checked="ToggleHandler"
           Unchecked="ToggleHandler" Content="Windows Error Reporting" Margin="0,8,16,0"/>
                             </UniformGrid>
                         </StackPanel>
@@ -339,8 +339,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                <TextBlock Text="📦" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBlock Text="Installed Apps" 
+                                <TextBlock Text="Installed Apps"
                               FontSize="20" 
                               FontWeight="Bold" 
                               Foreground="White" 
@@ -582,7 +581,7 @@
                        Background="#AA1A0A0F" 
                        Visibility="Visible">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="⏳" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="⌛" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                     <TextBlock Text="Loading installed applications..." 
                                   FontSize="16" 
                                   Foreground="White" 
@@ -592,7 +591,7 @@
                         </Grid>
                     </Border>
                     <!-- Control Panel -->
-                    <Border Grid.Row="2" Background="#3D1A29" Margin="10,5,10,10" CornerRadius="8">
+                    <Border Grid.Row="3" Background="#3D1A29" Margin="10,5,10,10" CornerRadius="8">
                         <Grid Margin="15,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -630,11 +629,14 @@
                                                              Visibility="Collapsed"
                                                              StrokeLineJoin="Round"/>
                                                                     <!-- Dash for indeterminate state -->
-                                                                    <Path x:Name="IndeterminateMark" 
-                                                             Data="M3,8 L13,8" 
-                                                             Stroke="#FF8B6F7F" 
-                                                             StrokeThickness="3" 
-                                                             Visibility="Collapsed"/>
+                                                                    <TextBlock x:Name="IndeterminateMark"
+           Text="-"
+           Foreground="#FF8B6F7F"
+           FontWeight="Bold"
+           FontSize="10"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Visibility="Collapsed"/>
                                                                 </Grid>
                                                             </Border>
                                                             <ContentPresenter VerticalAlignment="Center" 
@@ -731,11 +733,13 @@
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="PackageStoreTab" Header="Package Store" IsEnabled="False">
+
+            <TabItem x:Name="PackageStoreTab" Header="App Library" IsEnabled="False">
                 <Grid Background="#290914" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <!-- Header -->
@@ -746,13 +750,13 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                <TextBlock Text="Package Store" 
+                                <TextBlock Text="App Library" 
                   FontSize="20" 
                   FontWeight="Bold" 
                   Foreground="White" 
                   VerticalAlignment="Center"/>
                                 <TextBlock x:Name="InstallPackageCountText" 
-                  Text="(Search to browse)" 
+                  Text=" recommended apps"
                   FontSize="14" 
                   Foreground="#B0B0B0" 
                   VerticalAlignment="Center" 
@@ -792,7 +796,7 @@
                                         </TextBox.Style>
                                     </TextBox>
                                     <TextBlock x:Name="InstallSearchPlaceholder" 
-                      Text="Search" 
+                      Text="Search packages"
                       Foreground="#8B6F7F" 
                       FontSize="14" 
                       VerticalAlignment="Center" 
@@ -800,6 +804,72 @@
                       IsHitTestVisible="False"/>
                                 </Grid>
                             </Border>
+                        </Grid>
+                    </Border>
+                    <Border x:Name="InstallQueuePanel"
+                            Grid.Row="2"
+                            Background="#241018"
+                            BorderBrush="#4A2E3A"
+                            BorderThickness="1"
+                            Margin="10,5,10,5"
+                            CornerRadius="8"
+                            Visibility="Collapsed">
+                        <Grid Margin="12,8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollViewer x:Name="InstallQueueScrollViewer"
+              Grid.Row="1"
+              VerticalScrollBarVisibility="Disabled"
+              HorizontalScrollBarVisibility="Hidden"
+              PreviewMouseWheel="InstallQueueScrollViewer_PreviewMouseWheel"
+              Margin="0,8,0,0">
+                                <ItemsControl x:Name="InstallQueueList">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#2A1219"
+                                                    BorderBrush="#4A2E3A"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Padding="8,6"
+                                                    Margin="0,0,8,0"
+                                                    MinWidth="168">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Summary}"
+                                                                   Foreground="White"
+                                                                   FontSize="12"
+                                                                   FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                    <Border Grid.Column="1"
+                                                            Background="{Binding StatusBrush}"
+                                                            BorderBrush="{Binding StatusBorderBrush}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="4"
+                                                            Padding="6,2"
+                                                            Margin="8,0,0,0"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Status}"
+                                                                   Foreground="White"
+                                                                   FontSize="11"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
                     <!-- Package List -->
@@ -899,48 +969,139 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0,2"
-                                                Padding="10,6"
-                                                CornerRadius="6"
-                                                BorderThickness="1"
-                                                MouseLeftButtonUp="InstallPackageItem_Click"
-                                                Cursor="Hand">
-                                            <Border.Style>
-                                                <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#3B1B27"/>
-                                                            <Setter Property="BorderBrush" Value="#4A2E3A"/>
-                                                        </Trigger>
-                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter Property="Background" Value="#5A2438"/>
-                                                            <Setter Property="BorderBrush" Value="#B82A5A"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
+                                        <StackPanel Margin="0,0,0,14">
+                                            <Grid Margin="2,2,8,8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding Title}"
-                                                           FontSize="14"
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="16"
                                                            FontWeight="SemiBold"
-                                                           Foreground="White"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           VerticalAlignment="Center"/>
+                                                           Foreground="White"/>
                                                 <TextBlock Grid.Column="1"
-                                                           Text="{Binding Version}"
-                                                           FontSize="13"
-                                                           Foreground="#D9B9C7"
-                                                           Margin="12,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis"/>
+                                                           Text="{Binding CountText}"
+                                                           FontSize="12"
+                                                           Foreground="#8B6F7F"
+                                                           VerticalAlignment="Center"/>
                                             </Grid>
-                                        </Border>
+                                            <ItemsControl ItemsSource="{Binding Packages}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Width="214"
+                        Height="104"
+        Margin="0,0,10,8"
+        Padding="10"
+        CornerRadius="8"
+        BorderThickness="1"
+                                                                MouseLeftButtonUp="InstallPackageItem_Click"
+                                                                Cursor="Hand">
+                                                            <Border.Style>
+                                                                <Style TargetType="{x:Type Border}">
+                                                                    <Setter Property="Background" Value="#241018"/>
+                                                                    <Setter Property="BorderBrush" Value="#4A2E3A"/>
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Background" Value="#321622"/>
+                                                                            <Setter Property="BorderBrush" Value="#8B6F7F"/>
+                                                                        </Trigger>
+                                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                            <Setter Property="Background" Value="#4A1E30"/>
+                                                                            <Setter Property="BorderBrush" Value="#B82A5A"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="*"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                </Grid.RowDefinitions>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="42"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Border Width="38"
+                                                                            Height="38"
+                                                                            Background="#2A1219"
+                                                                            BorderBrush="#4A2E3A"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="8"
+                                                                            HorizontalAlignment="Left">
+                                                                        <Grid>
+                                                                            <Image Source="{Binding IconPath}"
+                                                                                   Visibility="{Binding IconVisibility}"
+                                                                                   Stretch="Uniform"
+                                                                                   Margin="6"/>
+                                                                            <TextBlock Text="📦"
+                                                                                       Visibility="{Binding IconFallbackVisibility}"
+                                                                                       Foreground="#D9B9C7"
+                                                                                       FontSize="20"
+                                                                                       FontWeight="Bold"
+                                                                                       HorizontalAlignment="Center"
+                                                                                       VerticalAlignment="Center"/>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                                        <TextBlock Text="{Binding Summary}"
+                                                                                   FontSize="14"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Foreground="White"
+                                                                                   TextTrimming="CharacterEllipsis"/>
+                                                                        <TextBlock Text="{Binding Title}"
+                                                                                   FontSize="12"
+                                                                                   Foreground="#8B6F7F"
+                                                                                   Margin="0,2,0,0"
+                                                                                   TextTrimming="CharacterEllipsis"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                                <TextBlock Grid.Row="1"
+                                                                           Text="{Binding Version}"
+                                                                           FontSize="12"
+                                                                           Foreground="#D9B9C7"
+                                                                           Margin="0,10,0,0"
+                                                                           TextTrimming="CharacterEllipsis"/>
+                                                                <WrapPanel Grid.Row="2" Margin="0,8,0,0">
+                                                                    <Border Background="#2D6B2D"
+                                                                            BorderBrush="#4A8B4A"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="4"
+                                                                            Padding="6,2"
+                                                                            Margin="0,0,5,0"
+                                                                            Visibility="{Binding InstalledBadgeVisibility}">
+                                                                        <TextBlock Text="Installed" Foreground="White" FontSize="11"/>
+                                                                    </Border>
+                                                                    <Border Background="#5A2438"
+                                                                            BorderBrush="#B82A5A"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="4"
+                                                                            Padding="6,2"
+                                                                            Margin="0,0,5,0"
+                                                                            Visibility="Collapsed">
+                                                                        <TextBlock Text="Selected" Foreground="White" FontSize="11"/>
+                                                                    </Border>
+                                                                    <Border Background="#7A5A20"
+                                                                            BorderBrush="#A77A2C"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="4"
+                                                                            Padding="6,2"
+                                                                            Visibility="{Binding UpdateBadgeVisibility}">
+                                                                        <TextBlock Text="Update available" Foreground="White" FontSize="11"/>
+                                                                    </Border>
+                                                                </WrapPanel>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -949,7 +1110,7 @@
            Background="#AA1A0A0F" 
            Visibility="Collapsed">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="⏳" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="⌛" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                     <TextBlock x:Name="InstallLoadingText" 
                       Text="Searching packages..." 
                       FontSize="16" 
@@ -963,21 +1124,17 @@
            Visibility="Visible">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock Text="📦" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,15"/>
-                                    <TextBlock Text="Search for packages to install" 
+                                    <TextBlock Text="No packages found"
                       FontSize="18" 
                       Foreground="#B0B0B0" 
                       HorizontalAlignment="Center"
                       Margin="0,0,0,5"/>
-                                    <TextBlock Text="Try searching for packages like brave, git, or vscodium" 
-                      FontSize="14" 
-                      Foreground="#8B6F7F" 
-                      HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
                     </Border>
                     <!-- Control Panel -->
-                    <Border Grid.Row="2" Background="#3D1A29" Margin="10,5,10,10" CornerRadius="8">
+                    <Border Grid.Row="3" Background="#3D1A29" Margin="10,5,10,10" CornerRadius="8">
                         <Grid Margin="15,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -985,31 +1142,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                <CheckBox x:Name="InstallSelectAllCheckBox" 
-                 Content="Select All" 
-                 Foreground="White" 
-                 VerticalAlignment="Center"
-                 Checked="InstallSelectAllCheckBox_Checked"
-                 Unchecked="InstallSelectAllCheckBox_Unchecked">
-                                    <CheckBox.Style>
-                                        <Style TargetType="{x:Type CheckBox}">
-                                            <Setter Property="Foreground" Value="White"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                                                        <StackPanel Orientation="Horizontal"/>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsChecked" Value="True"/>
-                                                            <Trigger Property="IsChecked" Value="{x:Null}"/>
-                                                            <Trigger Property="IsMouseOver" Value="True"/>
-                                                            <Trigger Property="IsPressed" Value="True"/>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </CheckBox.Style>
-                                </CheckBox>
+
                                 <TextBlock x:Name="InstallSelectedCountText" 
                   Text="0 selected" 
                   Foreground="#B0B0B0" 
@@ -1086,8 +1219,153 @@
                     </Border>
                 </Grid>
             </TabItem>
+            <TabItem Header="Presets">
+                <TabItem.Resources>
+                    <Style x:Key="PresetActionButton" TargetType="{x:Type Button}">
+                        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Poppins"/>
+                        <Setter Property="FontSize" Value="17"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#8B2635"/>
+                        <Setter Property="BorderBrush" Value="#A53D4A"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding" Value="18,11"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ButtonBorder" Property="Background" Value="#9E3040"/>
+                                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#FF8B6F7F"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="ButtonBorder" Property="Background" Value="#B82A5A"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabItem.Resources>
+                <Grid Background="#290914">
+                    <UniformGrid Columns="2"
+                     Rows="1"
+                     Width="720"
+                     Height="275"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center">
+                        <Border Background="#3D1A29"
+                    BorderBrush="#4A2E3A"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="+"
+                               Foreground="#FF8B6F7F"
+                               FontSize="34"
+                               HorizontalAlignment="Left"
+                               />
+                                <StackPanel Grid.Row="1">
+                                    <TextBlock Text="Create Preset"
+                                   Foreground="White"
+                                   FontSize="22"
+                                   FontWeight="Bold"/>
+                                    <TextBlock Text="Create a reusable XtremeShell configuration file, without applying changes to this system."
+                                   Foreground="#D9B9C7"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   Margin="0,8,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="CreatePresetButton"
+                            Grid.Row="2"
+                            Content="Create Preset"
+                            Style="{StaticResource PresetActionButton}"
+                            Click="CreatePresetButton_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#3D1A29"
+                    BorderBrush="#4A2E3A"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="24"
+                    Margin="12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="⬇"
+                               Foreground="#FF8B6F7F"
+                               FontSize="34"
+                               HorizontalAlignment="Left"
+                               />
+                                <StackPanel Grid.Row="1">
+                                    <TextBlock Text="Import Preset"
+                                   Foreground="White"
+                                   FontSize="22"
+                                   FontWeight="Bold"/>
+                                    <TextBlock Text="Review and apply a saved XtremeShell preset."
+                                   Foreground="#D9B9C7"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   Margin="0,8,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="ImportPresetButton"
+                            Grid.Row="2"
+                            Content="Import Preset"
+                            Style="{StaticResource PresetActionButton}"
+                            Click="ImportPresetButton_Click"/>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
-        <Image x:Name="xsBanner" HorizontalAlignment="Left" Height="41" Margin="660,23,0,0" VerticalAlignment="Top" Width="258" Source="/banner.png" MouseLeftButtonUp="xsBanner_Click"/>
-        <Label x:Name="xsVersion" Content="5.3.1" HorizontalAlignment="Left" Margin="918,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
+        <Border x:Name="PresetBuilderFrame"
+                BorderBrush="#D03545"
+                BorderThickness="4"
+                Visibility="Collapsed"
+                IsHitTestVisible="True"
+                Panel.ZIndex="10"/>
+        <Border x:Name="PresetBuilderBar"
+        Width="210"
+        Background="#8B2635"
+        BorderBrush="#D03545"
+        BorderThickness="1"
+        CornerRadius="0,0,8,8"
+        Padding="18,6"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Top"
+        Visibility="Collapsed"
+        IsHitTestVisible="True"
+        Cursor="Hand"
+        MouseEnter="PresetBuilderBar_MouseEnter"
+        MouseLeave="PresetBuilderBar_MouseLeave"
+        MouseLeftButtonUp="PresetBuilderBar_MouseLeftButtonUp"
+        Panel.ZIndex="11">
+            <TextBlock x:Name="PresetBuilderBarText"
+               Text="Preset Builder is active"
+               Foreground="White"
+                TextAlignment="Center"
+               FontSize="14"
+               FontWeight="SemiBold"/>
+        </Border>
+        <Image x:Name="xsBanner" HorizontalAlignment="Left" Height="41" Margin="694,23,0,0" VerticalAlignment="Top" Width="258" Source="/banner.png" MouseLeftButtonUp="xsBanner_Click"/>
+        <Label x:Name="xsVersion" Content="6.0" HorizontalAlignment="Left" Margin="952,23,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" FontWeight="Bold" MouseLeftButtonUp="xsVersion_Click"/>
     </Grid>
 </Window>

@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace XtremeShell5
+namespace XtremeShell
 {
     public partial class MainWindow
     {
@@ -81,6 +81,9 @@ namespace XtremeShell5
                 };
 
                 using var p = Process.Start(psi);
+                if (p == null)
+                    return false;
+
                 if (!p.WaitForExit(3000))
                 {
                     try { p.Kill(); } catch { }
@@ -117,6 +120,9 @@ namespace XtremeShell5
                 try
                 {
                     using var p = Process.Start(psi);
+                    if (p == null)
+                        return false;
+
                     p.WaitForExit();
                     return p.ExitCode == 0;
                 }
